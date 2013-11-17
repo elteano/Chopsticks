@@ -14,7 +14,7 @@ public class Game
      * Creates a new game in which each player starts with the given number of
      * fingers on each hand.
      */
-    this(uint startValue)
+    this(ubyte startValue)
     {
       playerOne = new Player(startValue);
       playerTwo = new Player(startValue);

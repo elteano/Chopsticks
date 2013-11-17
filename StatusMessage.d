@@ -1,3 +1,4 @@
+
 /**
  * Struct representing a status message to be pushed out to the clients. It is
  * composed of five unsigned bytes representing hands one and two for player
@@ -5,15 +6,25 @@
  */
 public struct StatusMessage
 {
-  /// Player one, hand one
-  ubyte p1h1;
-  /// Player one, hand two
-  ubyte p1h2;
-  /// Player two, hand one
-  ubyte p2h1;
-  /// Player two, hand two
-  ubyte p2h2;
-  /// Turn value; even for p1, odd for p2
-  ubyte turn;
+  public:
+    /// Player one, hand one
+    ubyte p1h1;
+    /// Player one, hand two
+    ubyte p1h2;
+    /// Player two, hand one
+    ubyte p2h1;
+    /// Player two, hand two
+    ubyte p2h2;
+    /// Turn value; even for p1, odd for p2
+    ubyte turn;
+
+  this(in ubyte buf[5])
+  {
+    p1h1 = buf[0];
+    p1h2 = buf[1];
+    p2h1 = buf[2];
+    p2h2 = buf[3];
+    turn = buf[4];
+  }
 }
 

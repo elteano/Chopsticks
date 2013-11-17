@@ -16,6 +16,7 @@ public interface GameInterface
      * command.
      */
     Command getCommand();
+    Command getCommand(ubyte pnum);
     /**
      * Pushes the status of the player from the GameServer to the players.
      * Implementations of this function should immediately inform all clients
@@ -32,7 +33,7 @@ public interface GameInterface
      * pushStatus(p1, p2, 5);
      * -------------
      */
-    void pushStatus(Player playerOne, Player playerTwo, uint turn);
+    void pushStatus(Player playerOne, Player playerTwo, ubyte turn);
     /**
      * Informs the GameInterface that it ought to do its initialization tasks.
      *

@@ -1,3 +1,4 @@
+
 /**
  * The maximum number of fingers allowed up at a time. If this number is
  * reached, then the number of active fingers resets to zero.
@@ -13,9 +14,11 @@ public class Hand
   /**
    * The number of "fingers" up on the hand.
    */
-  private uint number;
+  private ubyte number;
 
   public:
+
+version(NONE){
 
   /**
    * Creates a hand with the default starting value of one.
@@ -24,11 +27,12 @@ public class Hand
   {
     this(1);
   }
+}
 
   /**
    * Creates a hand with the given starting value.
    */
-  this(uint startValue)
+  this(ubyte startValue)
   {
     number = startValue;
   }
@@ -46,9 +50,19 @@ public class Hand
   /**
    * Gets the number of "fingers" up on the hand.
    */
-  uint getNumber()
+  ubyte getNumber()
   {
     return number;
+  }
+
+  /**
+   * Sets the value of the hand to the given number.
+   * Params:
+   *  number = the new value for the hand.
+   */
+  void setNumber(ubyte number)
+  {
+    this.number = number % 5;
   }
 
   /**
@@ -57,7 +71,7 @@ public class Hand
    */
   bool isActive()
   {
-    return number == 0;
+    return number != 0;
   }
 }
 

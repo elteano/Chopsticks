@@ -22,7 +22,7 @@ public struct Command
  *
  * Stored as a ubyte due to short list of possible values.
  */
-enum CommandDirective : ubyte
+public enum CommandDirective : ubyte
 {
   /// Hit one hand with another
   STRIKE,

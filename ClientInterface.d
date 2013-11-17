@@ -13,8 +13,11 @@ public interface ClientInterface
      */
     StatusMessage getStatus();
     /**
-     * Instructs the client to perform initialization tasks.
+     * Instructs the client to perform initialization tasks. This should also
+     * listen for the player number of the connected client.
+     * Returns:
+     * The player number; 0 for player 1, 1 for player 2.
      */
-    void initialize();
+    ubyte initialize();
 }
 
