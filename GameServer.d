@@ -13,6 +13,8 @@ private enum CommandError : ubyte
   OUT_OF_TURN,
   /// The strike coma
   MALFORMED_STRIKE,
+  /// Striking to or from an inactive hand
+  ILLEGAL_STRIKE,
   /// Player trying to split when they already have two active hands.
   IMPROPER_SPLIT
 }
@@ -68,6 +70,9 @@ public class GameServer
             case CommandError.OUT_OF_TURN:
               writefln("Received from %u, expected %u.", c.player_src, turn);
               break;
+            case CommandError.ILLEGAL_STRIKE:
+              writefln("Player %u attempted an illegal strike.", c.player_src);
+              break;
             default:
               writefln("error: %u", err);
               break;
@@ -75,7 +80,6 @@ public class GameServer
         }
         // If there's an error, then we always gotta get a resend
       }
-      clientInterface.pushStatus(player1, player2, turn);
       clientInterface.pushStatus(player1, player2, turn);
     }
 
@@ -92,7 +96,7 @@ public class GameServer
      */
     CommandError interpretCommand(in Command c)
     {
-      if (turn == c.player_src)
+      if ((turn % 2) == c.player_src)
       {
         Player src, dest;
         switch(c.player_src)
@@ -114,11 +118,18 @@ public class GameServer
         final switch(c.directive)
         {
           case CommandDirective.STRIKE:
-            dest.getHand(c.tgt_hand).increment(src.getHand(c.src_hand)
-                .getNumber());
+            if (dest.getHand(c.tgt_hand).isActive() && src.getHand(c.src_hand).isActive())
+            {
+              dest.getHand(c.tgt_hand).increment(src.getHand(c.src_hand)
+                  .getNumber());
+            }
+            else
+            {
+              return CommandError.ILLEGAL_STRIKE;
+            }
             break;
           case CommandDirective.SPLIT:
-            if (src.splitHands())
+            if (!src.splitHands())
             {
               return CommandError.IMPROPER_SPLIT;
             }

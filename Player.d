@@ -1,7 +1,6 @@
 
 import Hand;
-
-public static enum HandIdentifier : ubyte { LEFT, RIGHT }
+import convenience;
 
 /**
  * Class representing a player in the number game. The player has two hands;

@@ -3,7 +3,7 @@ import std.string;
 import std.conv;
 import std.stdio;
 import std.regex;
-import StatusMessage, ClientInterface, UnixClient, Command, Player;
+import StatusMessage, ClientInterface, UnixClient, Command, convenience;
 
 /**
  * User type that plays the game via a terminal.
@@ -21,8 +21,8 @@ public class TerminalUser
       string input;
       StatusMessage currentStatus = connection.getStatus();
       printStatus(currentStatus);
-      while(currentStatus.p1h1 != 0 && currentStatus.p1h2 != 0
-          || currentStatus.p2h1 != 0 && currentStatus.p2h2 != 0)
+      while((currentStatus.p1h1 != 0 || currentStatus.p1h2 != 0)
+          && (currentStatus.p2h1 != 0 || currentStatus.p2h2 != 0))
       {
         if (currentStatus.turn == p_num)
         {

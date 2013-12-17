@@ -1,7 +1,7 @@
 import std.stdio;
 import std.socket;
 import std.file;
-import GameInterface, Command, StatusMessage, Player;
+import GameInterface, Command, StatusMessage, convenience;
 
 /**
  * An implementation of the GameInterface that listens to UNIX sockets for a
@@ -19,9 +19,14 @@ public class UnixInterface : GameInterface
   public:
     this(string socketname)
     {
-      mSocket = new Socket(AddressFamily.UNIX, SocketType.STREAM);
-      mSocket.bind(new UnixAddress(socketname));
       sockname = socketname;
+      mSocket = new Socket(AddressFamily.UNIX, SocketType.STREAM);
+      if (exists(sockname))
+      {
+        writefln("Removing existing socket %s.", sockname);
+        remove(sockname);
+      }
+      mSocket.bind(new UnixAddress(sockname));
     }
 
     //GameInterface functions
@@ -67,6 +72,7 @@ public class UnixInterface : GameInterface
     /// Listen for client connections.
     void initialize()
     {
+      writeln("Waiting for players.");
       ubyte[] m1 = [0];
       ubyte[] m2 = [1];
       mSocket.listen(2);
@@ -75,11 +81,13 @@ public class UnixInterface : GameInterface
       // Send a 0 character informing the recipient that they are the first
       // player
       p1Socket.send(m1);
+      writeln("Player 0 connected.");
       // Listen for the player two connection
       p2Socket = mSocket.accept();
       // Send a 1 character informing the recipient that they are the second
       // player
       p2Socket.send(m2);
+      writeln("Player 1 connected.");
     }
 
     version(NONE)
