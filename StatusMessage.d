@@ -18,7 +18,7 @@ public struct StatusMessage
     /// Turn value; even for p1, odd for p2
     ubyte turn;
 
-  this(in ubyte buf[5])
+  this(in ubyte[5] buf)
   {
     p1h1 = buf[0];
     p1h2 = buf[1];
