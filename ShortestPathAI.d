@@ -112,7 +112,6 @@ public class ShortestPathAi
             // Determine which command hit what
             return getStep(p_num, start.left, start.right, next.right);
           }
-          break;
         default: // Use right side for current player
           if (left_differs)
           {
@@ -125,7 +124,6 @@ public class ShortestPathAi
             return Command.Command(p_num, CommandDirective.SPLIT,
                 HandIdentifier.LEFT, HandIdentifier.LEFT);
           }
-          break;
       }
     }
 

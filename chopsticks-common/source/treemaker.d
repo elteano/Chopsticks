@@ -96,7 +96,6 @@ public WTreeNode!TurnInstance getShortestPath(TurnInstance start, uint depth, ub
       //writeln();
       // return the dead node
       return node;
-      continue;
     }
     TurnInstance ll, lr, rl, rr, split;
     bool llGood, lrGood, rlGood, rrGood, splitGood;

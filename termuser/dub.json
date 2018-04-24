@@ -1,0 +1,14 @@
+{
+	"name": "chopsticks-termuser",
+	"authors": [
+		"Thomas"
+	],
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2018, Thomas",
+	"license": "proprietary",
+  "targetType": "executable",
+  "dependencies":
+  {
+    "chopsticks-common": "*"
+  }
+}

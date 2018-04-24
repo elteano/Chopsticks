@@ -1,35 +1,42 @@
 #Chopsticks
 
-Simulates the number-hand game, sometimes called 'Chopsticks', in a 
+Simulates the number-hand game, sometimes called 'Chopsticks', in a
 server-client setup.
 
 ##Compiling
 
-This should be as easy as running
+Previously this was done with GNU Make, although it has since been converted to
+use `dub`, as converting to dub seemed to be an easier way to make the build
+system cross-platform.
 
-	make all
-from within the source directory. This will create a number of object files and 
-three executables:
-- gameserv, the game server
-- client, a terminal-based user client
-- spai, an AI client that determines the shortest (although not necessarily the 
-	most reliable) path to victory
+First, you will need to add the chopsticks-common package to your local package
+as such:
+
+`dub add-local chopsticks-common`
+
+Then you may go into the gameserv and termuser directories and simply
+
+`dub build`
+
+in order to get everything going.
 
 ###Dependencies
 Currently, the project uses dmd to compile, and as such that is a dependency. 
 Other than the standard D libraries, the project has no library dependencies.
 
-Due to the current nature of the client-server setup, this must be run on a 
-platform that supports Unix-domain sockets. Extending functionality to support 
-other client-server interfaces should be as simple as creating implementations 
-of the ClientInterface and GameInterface interfaces for the appropriate setup, 
-and then compiling them into the game server and clients in place of the 
-current interfaces.
+It is possible to compile the system to use Unix sockets, although IPv4 sockets
+are now the default. When compiling on non-Posix systems, Unix-style sockets
+will not be available.
 
 ##Running
 
-First, run the game server. This should create a socket in the current 
-directory titled 'asdf.sock'. You may then run the two clients in player order.
+The game server must be run first, followed by the two players in player order.
+The game server does not support match configuration; the first player to
+connect will be the first to make a move.
+
+On Windows I have noticed an odd thing in that Git Bash will not work properly
+for the terminal users. Running them from the Windows Command Prompt works as
+expected.
 
 ###Terminal Client
 

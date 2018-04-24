@@ -1,0 +1,14 @@
+.dub
+docs.json
+__dummy.html
+docs/
+chopsticks.so
+chopsticks.dylib
+chopsticks.dll
+chopsticks.a
+chopsticks.lib
+chopsticks-test-*
+*.exe
+*.o
+*.obj
+*.lst

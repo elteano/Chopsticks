@@ -1,31 +1,30 @@
 import std.socket;
-import ClientInterface, statusMessage, Command;
+import std.stdio;
 
+import ClientInterface, StatusMessage, Command;
 
 public abstract class SocketClient : ClientInterface
 {
-	protected:
-		Socket connectedSocket;
-		Address connectTo;
+  private:
+    Socket connectedSocket;
+    Address connectTo;
 
-	public:
+  protected:
+    abstract Socket getSocket();
+    abstract Address getDestination();
+
+  public:
     void pushCommand(Command c)
     {
-      Command cs[1];
+      Command[1] cs;
       cs[0] = c;
       connectedSocket.send(cs);
     }
 
     StatusMessage getStatus()
     {
-      //ubyte buf[5];
-      StatusMessage ret[1];
+      StatusMessage[1] ret;
       connectedSocket.receive(ret);
-      //ret.p1h1 = buf[0];
-      //ret.p1h2 = buf[1];
-      //ret.p2h1 = buf[2];
-      //ret.p2h2 = buf[3];
-      //ret.turn = buf[4];
       return ret[0];
     }
 
@@ -39,12 +38,17 @@ public abstract class SocketClient : ClientInterface
      * Returns:
      * The player number; 0 for player 1, 1 for player 2.
      */
-    ubyte initialize()
-    {
-      ubyte rec[1];
-      connectedSocket.connect(connectTo);
-      connectedSocket.receive(rec);
-      return rec[0];
-    }
+  override final ubyte initialize()
+  {
+    connectedSocket = getSocket();
+    connectTo = getDestination();
+
+    ubyte[1] rec;
+    writefln("Connecting to: %s", connectTo);
+    stdout.flush();
+    connectedSocket.connect(connectTo);
+    connectedSocket.receive(rec);
+    return rec[0];
+  }
 }
 

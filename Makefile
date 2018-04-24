@@ -11,7 +11,7 @@ SUREAI_OBJS=Command.o SurestPathAI.o ClientInterface.o treemaker.o wtree.o \
 all: gameserv client spai sureai
 
 %.o: %.d
-	dmd -g -c $<
+	dmd -g -c -of=$@ $<
 
 gameserv: $(SERV_OBJS)
 	dmd -g -ofgameserv $(SERV_OBJS)

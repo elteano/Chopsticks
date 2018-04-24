@@ -1,6 +1,6 @@
 
 import std.stdio;
-import Command, Player, GameInterface, UnixInterface;
+import Command, Player, GameInterface, InetInterface, UnixInterface;
 
 /**
  * Enum type containing errors which may occur while interpreting a command.
@@ -149,7 +149,7 @@ public class GameServer
       // Create everything
       player1 = new Player(1);
       player2 = new Player(1);
-      clientInterface = new UnixInterface("asdf.sock");
+      clientInterface = new InetInterface(cast(ushort) 31718);
     }
 
     void start()

@@ -1,0 +1,10 @@
+{
+	"name": "chopsticks-common",
+	"authors": [
+		"Thomas"
+	],
+	"description": "Library containing common code for the Chopsticks application.",
+	"copyright": "Copyright © 2018, Thomas",
+	"license": "proprietary",
+  "targetType": "library"
+}

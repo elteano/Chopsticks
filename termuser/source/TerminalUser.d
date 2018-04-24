@@ -3,7 +3,7 @@ import std.string;
 import std.conv;
 import std.stdio;
 import std.regex;
-import StatusMessage, ClientInterface, UnixClient, Command, convenience;
+import InetClient, StatusMessage, ClientInterface, UnixClient, Command, convenience;
 
 /**
  * User type that plays the game via a terminal.
@@ -106,11 +106,42 @@ public class TerminalUser
     }
 
   public:
-    this()
+    this(string client_spec = "inet localhost 31718")
     {
+      auto specs = client_spec.split();
+      if (specs.length == 0 || specs[0] == "inet")
+      {
+        string hostname = "localhost";
+        ushort port = cast(ushort) 31718;
+        if (specs.length > 1)
+        {
+          hostname = specs[1];
+          if (specs.length > 2)
+          {
+            port = to!ushort(specs[2]);
+          }
+        }
+        writefln("Connecting to %s, %d", hostname, port);
+        stdout.flush();
+        connection = new InetClient(hostname, port);
+      }
+      else if (specs[0] == "unix")
+      {
+        string sockname = "asdf.sock";
+        if (specs.length > 1)
+        {
+          sockname = specs[1];
+        }
+        connection = new UnixClient(sockname);
+      }
+      else
+      {
+        stderr.writefln("Unable to parse spec %s.", specs[0]);
+        throw new Exception("Bad spec.");
+      }
       writeln("Welcome to the number game!");
-      connection = new UnixClient("asdf.sock");
     }
+
     void start()
     {
       writeln("Connecting to the server...");
