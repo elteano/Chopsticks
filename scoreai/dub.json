@@ -1,0 +1,14 @@
+{
+	"name": "chopsticks-scoreai",
+	"authors": [
+		"Thomas"
+	],
+	"description": "An AI which scores game state to determine its next move.",
+	"copyright": "Copyright © 2018, Thomas",
+	"license": "proprietary",
+  "targetType": "executable",
+  "dependencies":
+  {
+    "chopsticks-common": "*"
+  }
+}

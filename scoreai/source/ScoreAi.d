@@ -2,8 +2,11 @@ import std.algorithm.comparison;
 import std.stdio;
 import std.typecons;
 
-import convenience;
+import ClientDecider;
 import Command;
+import convenience;
+import GenericClient;
+import InetClient;
 import StatusMessage;
 
 /**
@@ -13,13 +16,13 @@ import StatusMessage;
  * propagates those through other possible scoring configurations until we get
  * some good paths.
  */
-public class ScoreAi
+public class ScoreAi : ClientDecider
 {
 	private:
 		const real DEGEN_FACTOR = 0.9;
 		const real LOSING_SCORE = -20;
 		const real WINNING_SCORE = 10;
-		// Start with |V|^3
+		// Start with |V|^2
 		const ulong NUM_ITERATIONS = 48 * 48 * 24 * 24;
 
 		/**
@@ -245,7 +248,7 @@ public class ScoreAi
 			}
 		}
 
-		Command processTurn(ubyte p_num, StatusMessage currentTurn)
+		Command getNextPlay(ubyte p_num, StatusMessage currentTurn)
 		{
 			Command ret;
 			ubyte ml = 0;
@@ -277,22 +280,26 @@ public class ScoreAi
 				if (el > 0)
 				{
 					size_t ind = (el + ml) % 5 * 5 + er;
+          writefln("Strike left -> left has score %f.", values[r][ind]);
 					if (values[r][ind] > max_score)
 					{
 						ret.directive = CommandDirective.STRIKE;
 						ret.src_hand = HandIdentifier.LEFT;
 						ret.tgt_hand = HandIdentifier.LEFT;
+            writeln("I like this!");
 					}
 				}
 				// Left -> Right
 				if (er > 0)
 				{
 					size_t ind = el * 5 + (er + ml) % 5;
+          writefln("Strike left -> right has score %f.", values[r][ind]);
 					if (values[r][ind] > max_score)
 					{
 						ret.directive = CommandDirective.STRIKE;
 						ret.src_hand = HandIdentifier.LEFT;
 						ret.tgt_hand = HandIdentifier.RIGHT;
+            writeln("I like this!");
 					}
 				}
 			}
@@ -300,9 +307,11 @@ public class ScoreAi
 			else if (mr % 2 == 0)
 			{
 				size_t ind = mr * 3 % 25;
+        writefln("Split right -> left has score %f.", values[ind][c]);
 				if (values[ind][c] > max_score)
 				{
 					ret.directive = CommandDirective.SPLIT;
+          writeln("I like this!");
 				}
 			}
 			// Right strikes
@@ -312,22 +321,26 @@ public class ScoreAi
 				if (el > 0)
 				{
 					size_t ind = (el + mr) % 5 * 5 + er;
+          writefln("Strike right -> left has score %f.", values[r][ind]);
 					if (values[r][ind] > max_score)
 					{
 						ret.directive = CommandDirective.STRIKE;
-						ret.src_hand = HandIdentifier.LEFT;
+						ret.src_hand = HandIdentifier.RIGHT;
 						ret.tgt_hand = HandIdentifier.LEFT;
+            writeln("I like this!");
 					}
 				}
 				// Right -> Right
 				if (er > 0)
 				{
 					size_t ind = el * 5 + (er + mr) % 5;
+          writefln("Strike right -> right has score %f.", values[r][ind]);
 					if (values[r][ind] > max_score)
 					{
 						ret.directive = CommandDirective.STRIKE;
-						ret.src_hand = HandIdentifier.LEFT;
+						ret.src_hand = HandIdentifier.RIGHT;
 						ret.tgt_hand = HandIdentifier.RIGHT;
+            writeln("I like this!");
 					}
 				}
 			}
@@ -335,17 +348,22 @@ public class ScoreAi
 			else if (ml % 2 == 0)
 			{
 				size_t ind = ml * 3 % 25;
+        writefln("Split left -> right has score %f.", values[ind][c]);
 				if (values[ind][c] > max_score)
 				{
 					ret.directive = CommandDirective.SPLIT;
+          writeln("I like this!");
 				}
 			}
 			return ret;
 		}
 }
 
-void main(string[] args)
+public void main(string[] args)
 {
-	new ScoreAi();
+  SocketClient sc = new InetClient("localhost", 31718);
+  sc.initialize();
+  ScoreAi ai = new ScoreAi();
+  GenericClient client = new GenericClient(ai, sc);
+  client.gameLoop();
 }
-

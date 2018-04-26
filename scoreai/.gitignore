@@ -1,0 +1,14 @@
+.dub
+docs.json
+__dummy.html
+docs/
+chopsticks-scoreai.so
+chopsticks-scoreai.dylib
+chopsticks-scoreai.dll
+chopsticks-scoreai.a
+chopsticks-scoreai.lib
+chopsticks-scoreai-test-*
+*.exe
+*.o
+*.obj
+*.lst
