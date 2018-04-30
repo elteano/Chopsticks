@@ -9,8 +9,8 @@ Previously this was done with GNU Make, although it has since been converted to
 use `dub`, as converting to dub seemed to be an easier way to make the build
 system cross-platform.
 
-First, you will need to add the chopsticks-common package to your local package
-as such:
+First, you will need to add the chopsticks-common package for local dependency
+resolution as such:
 
 `dub add-local chopsticks-common`
 
@@ -21,7 +21,7 @@ Then you may go into the gameserv, termuser, and scoreai directories and simply
 in order to get everything going.
 
 ### Dependencies
-Currently, the project uses dmd to compile, and as such that is a dependency.
+
 Other than the standard D libraries, the project has no library dependencies.
 
 It is possible to compile the system to use Unix sockets, although IPv4 sockets
