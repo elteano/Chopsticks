@@ -46,12 +46,13 @@ public class GenericClient
         writeln("It is the opponent's turn.");
       }
       writefln("Your hands have %u and %u. Your foe has %u and %u.", h1, h2,
-          eh1, eh2);
+               eh1, eh2);
     }
 
   public:
-    this(ClientDecider decider, ClientInterface connection)
+    this(ClientDecider decider, ClientInterface connection, ubyte pNum)
     {
+      p_num = pNum;
       this.decider = decider;
       this.connection = connection;
     }
@@ -63,7 +64,7 @@ public class GenericClient
       // 5 because it is neither 0 nor 1
       ubyte prev_poll = 5;
       while((currentStatus.p1h1 != 0 || currentStatus.p1h2 != 0)
-          && (currentStatus.p2h1 != 0 || currentStatus.p2h2 != 0))
+            && (currentStatus.p2h1 != 0 || currentStatus.p2h2 != 0))
       {
         if (currentStatus.turn == p_num)
         {
@@ -87,4 +88,3 @@ public class GenericClient
       }
     }
 }
-
