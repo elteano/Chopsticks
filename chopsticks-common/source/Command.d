@@ -2,6 +2,8 @@ import Player;
 import convenience;
 import std.conv;
 
+import StatusPrefix: StatusPrefix;
+
 /**
  * Describes data fields for passing commands around. This is the primary means
  * of communication between GameInterfaces and the GameServer.
@@ -10,7 +12,7 @@ public struct Command
 {
   public:
     /// Player initiating the command
-    uint player_src;
+    StatusPrefix prefix;
     /// Action to be taken by the player.
     CommandDirective directive;
     /// Hand used by the player; unused if directive is SPLIT
@@ -18,10 +20,10 @@ public struct Command
     /// Hand targeted by the player; unused if directive is SPLIT
     HandIdentifier tgt_hand;
 
-    this(uint p_src, CommandDirective dir, HandIdentifier src,
-        HandIdentifier tgt)
+    this(StatusPrefix prefix, CommandDirective dir, HandIdentifier src,
+         HandIdentifier tgt)
     {
-      player_src = p_src;
+      this.prefix = prefix;
       directive = dir;
       src_hand = src;
       tgt_hand = tgt;
@@ -32,10 +34,10 @@ public struct Command
       final switch (directive)
       {
         case CommandDirective.STRIKE:
-          return to!string(player_src) ~ ": STRIKE " ~ to!string(src_hand)
-            ~ " -> " ~ to!string(tgt_hand);
+          return "STRIKE " ~ to!string(src_hand)
+                 ~ " -> " ~ to!string(tgt_hand);
         case CommandDirective.SPLIT:
-          return to!string(player_src) ~ ": SPLIT";
+          return "SPLIT";
       }
     }
 }
@@ -52,4 +54,3 @@ public enum CommandDirective : ubyte
   /// Split even value of our own hand
   SPLIT
 }
-

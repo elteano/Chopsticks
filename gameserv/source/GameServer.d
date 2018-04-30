@@ -1,6 +1,12 @@
-
+import std.concurrency;
 import std.stdio;
-import Command, Player, GameInterface, InetInterface, UnixInterface;
+
+import Command;
+import GameInterface;
+import InetInterface;
+import Player;
+import StatusPrefix: StatusPrefix;
+import UnixInterface;
 
 /**
  * Enum type containing errors which may occur while interpreting a command.
@@ -56,29 +62,41 @@ public class GameServer
         clientInterface.pushStatus(player1, player2, turn);
 
         // Get told how it is
-        Command c = clientInterface.getCommand(turn);
+        auto msg = receiveOnly!(ubyte, Command);
+        ubyte pNum = msg[0];
+        Command c = msg[1];
         writeln("Received command.");
-
-        if ((err = interpretCommand(c)) == CommandError.NONE)
+        switch (c.prefix)
         {
-          nextTurn();
+          case StatusPrefix.STATUS_POLL:
+            clientInterface.pushStatus(pNum, player1, player2, turn);
+            break;
+          case StatusPrefix.PLAY_INCOMING:
+            if ((err = interpretCommand(pNum, c)) == CommandError.NONE)
+            {
+              nextTurn();
+            }
+            else
+            {
+              switch(err)
+              {
+                case CommandError.OUT_OF_TURN:
+                  writefln("Received from %u, expected %u.", pNum, turn);
+                  break;
+                case CommandError.ILLEGAL_STRIKE:
+                  writefln("Player %u attempted an illegal strike.", pNum);
+                  break;
+                default:
+                  writefln("error: %u", err);
+                  break;
+              }
+            }
+            break;
+          // If there's an error, then we always gotta get a resend
+          default:
+            //ignore
+            break;
         }
-        else
-        {
-          switch(err)
-          {
-            case CommandError.OUT_OF_TURN:
-              writefln("Received from %u, expected %u.", c.player_src, turn);
-              break;
-            case CommandError.ILLEGAL_STRIKE:
-              writefln("Player %u attempted an illegal strike.", c.player_src);
-              break;
-            default:
-              writefln("error: %u", err);
-              break;
-          }
-        }
-        // If there's an error, then we always gotta get a resend
       }
       clientInterface.pushStatus(player1, player2, turn);
     }
@@ -94,12 +112,12 @@ public class GameServer
      * Returns:
      * See CommandError.
      */
-    CommandError interpretCommand(in Command c)
+    CommandError interpretCommand(ubyte pNum, in Command c)
     {
-      if ((turn % 2) == c.player_src)
+      if ((turn % 2) == pNum)
       {
         Player src, dest;
-        switch(c.player_src)
+        switch(pNum)
         {
           case 0:
             src = player1;
@@ -121,7 +139,7 @@ public class GameServer
             if (dest.getHand(c.tgt_hand).isActive() && src.getHand(c.src_hand).isActive())
             {
               dest.getHand(c.tgt_hand).increment(src.getHand(c.src_hand)
-                  .getNumber());
+                                                 .getNumber());
             }
             else
             {
@@ -141,6 +159,11 @@ public class GameServer
       }
       // No error returned - report success!
       return CommandError.NONE;
+    }
+
+    void handleMessage(ubyte pNum)
+    {
+
     }
 
   public:
@@ -167,4 +190,3 @@ public void main(char[][] args)
   GameServer gs = new GameServer();
   gs.start();
 }
-

@@ -34,6 +34,7 @@ public interface GameInterface
      * -------------
      */
     void pushStatus(Player playerOne, Player playerTwo, ubyte turn);
+    void pushStatus(ubyte dest, Player playerOne, Player playerTwo, ubyte turn);
     /**
      * Informs the GameInterface that it ought to do its initialization tasks.
      *
@@ -43,4 +44,3 @@ public interface GameInterface
      */
     void initialize();
 }
-

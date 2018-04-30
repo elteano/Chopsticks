@@ -3,7 +3,14 @@ import std.string;
 import std.conv;
 import std.stdio;
 import std.regex;
-import InetClient, StatusMessage, ClientInterface, UnixClient, Command, convenience;
+
+import ClientInterface;
+import convenience;
+import Command;
+import InetClient;
+import StatusMessage;
+import StatusPrefix: StatusPrefix;
+import UnixClient;
 
 /**
  * User type that plays the game via a terminal.
@@ -22,14 +29,14 @@ public class TerminalUser
       StatusMessage currentStatus = connection.getStatus();
       printStatus(currentStatus);
       while((currentStatus.p1h1 != 0 || currentStatus.p1h2 != 0)
-          && (currentStatus.p2h1 != 0 || currentStatus.p2h2 != 0))
+            && (currentStatus.p2h1 != 0 || currentStatus.p2h2 != 0))
       {
         if (currentStatus.turn == p_num)
         {
           input = readln();
           connection.pushCommand(parseCommand(chop(input)));
         }
-        currentStatus=connection.getStatus();
+        currentStatus = connection.getStatus();
         printStatus(currentStatus);
       }
       ubyte winner = 0;
@@ -75,14 +82,14 @@ public class TerminalUser
         writeln("It is the opponent's turn.");
       }
       writefln("Your hands have %u and %u. Your foe has %u and %u.", h1, h2,
-          eh1, eh2);
+               eh1, eh2);
     }
 
     Command parseCommand(string command)
     {
       Command ret;
       writefln("entered %s", command);
-      ret.player_src = p_num;
+      ret.prefix = StatusPrefix.PLAY_INCOMING;
       if (command == "split")
       {
         ret.directive = CommandDirective.SPLIT;
@@ -94,8 +101,8 @@ public class TerminalUser
         auto split = split(command, rx);
         if (split[0] == "strike" && split.length >= 3)
         {
-          ret.src_hand = cast(HandIdentifier) (parse!ubyte(split[1]) % 2);
-          ret.tgt_hand = cast(HandIdentifier) (parse!ubyte(split[2]) % 2);
+          ret.src_hand = cast(HandIdentifier) (parse!ubyte (split[1]) % 2);
+          ret.tgt_hand = cast(HandIdentifier) (parse!ubyte (split[2]) % 2);
           writefln("src, tgt: %u, %u", ret.src_hand, ret.tgt_hand);
         }
         else{
@@ -118,7 +125,7 @@ public class TerminalUser
           hostname = specs[1];
           if (specs.length > 2)
           {
-            port = to!ushort(specs[2]);
+            port = to!ushort (specs[2]);
           }
         }
         writefln("Connecting to %s, %d", hostname, port);
@@ -157,4 +164,3 @@ public void main(string[] args)
   auto termUser = new TerminalUser();
   termUser.start();
 }
-
