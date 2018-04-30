@@ -1,9 +1,9 @@
-#Chopsticks
+# Chopsticks
 
 Simulates the number-hand game, sometimes called 'Chopsticks', in a
 server-client setup.
 
-##Compiling
+## Compiling
 
 Previously this was done with GNU Make, although it has since been converted to
 use `dub`, as converting to dub seemed to be an easier way to make the build
@@ -20,7 +20,7 @@ Then you may go into the gameserv, termuser, and scoreai directories and simply
 
 in order to get everything going.
 
-###Dependencies
+### Dependencies
 Currently, the project uses dmd to compile, and as such that is a dependency.
 Other than the standard D libraries, the project has no library dependencies.
 
@@ -28,7 +28,7 @@ It is possible to compile the system to use Unix sockets, although IPv4 sockets
 are now the default. When compiling on non-Posix systems, Unix-style sockets
 will not be available.
 
-##Running
+## Running
 
 The game server must be run first, followed by the two players in player order.
 The game server does not support match configuration; the first player to
@@ -41,7 +41,7 @@ expected.
 `dub run` in any directory will build the current directory if necessary and run
 the result.
 
-###Terminal Client
+### Terminal Client
 
 The terminal client accepts two commands, split and strike. Split accepts no
 arguments, and is used to split the value of one hand over both should one hand
@@ -51,7 +51,7 @@ left and right source and target, respectively. For example,
 	strike 0 1
 will add the value of the player's left hand to the target's right.
 
-###Score AI
+### Score AI
 
 The goal of this guy was to provide the most difficult opponent possible to an
 enterprising user. It will take a bit of time to calculate how to crush its
