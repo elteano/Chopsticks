@@ -1,7 +1,7 @@
 # Chopsticks
 
 Simulates the number-hand game, sometimes called 'Chopsticks', in a
-server-client setup.
+server-client setup. The rules for the game can be found on [Wikipedia](https://en.wikipedia.org/wiki/Chopsticks_(hand_game)).
 
 ## Compiling
 
