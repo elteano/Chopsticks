@@ -1,7 +1,10 @@
 # Chopsticks
 
 Simulates the number-hand game, sometimes called 'Chopsticks', in a
-server-client setup. The rules for the game can be found on [Wikipedia](https://en.wikipedia.org/wiki/Chopsticks_(hand_game)).
+server-client setup. The rules for the game can be found on
+[Wikipedia](https://en.wikipedia.org/wiki/Chopsticks_(hand_game)). Note that in
+this variation, the split may only occur if one hand is even and the other is
+zero.
 
 ## Compiling
 
